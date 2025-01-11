@@ -2,6 +2,12 @@ name: Reusable Semantic Release Workflow
 
 on:
   workflow_call:
+    inputs:
+      releaserc:
+        description: releaserc configuration file
+        required: false
+        type: string
+        default: ./.releaserc.json
 
 permissions:
   contents: read
@@ -24,6 +30,12 @@ jobs:
         uses: cycjimmy/semantic-release-action@v4
         with:
           semantic_version: 24.0.0
+          extends: .releaserc.json
+          extra_plugins: |
+            @semantic-release/commit-analyzer
+            @semantic-release/git
+            @semantic-release/release-notes-generator
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
