@@ -1,0 +1,67 @@
+name: Reusable Cloud Run Deploy
+
+on:
+  workflow_call:
+    inputs:
+      cloud_run_service:
+        required: true
+        type: string
+      region:
+        required: true
+        type: string
+      workload_identity_provider:
+        required: true
+        type: string
+      service_account:
+        required: true
+        type: string
+      image:
+        required: true
+        type: string
+      secret_mounts:
+        required: false
+        type: string
+        default: ""   # e.g. "/etc/secrets/db=db:latest,/etc/secrets/api=api-key:5"
+    secrets:
+      github_token:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      # Authenticate to Google Cloud via Workload Identity Federation
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
+
+      - name: Prepare secret flags
+        run: |
+          SECRET_FLAGS=""
+          if [ -n "${{ inputs.secret_mounts }}" ]; then
+            IFS=',' read -ra MOUNTS <<< "${{ inputs.secret_mounts }}"
+            for m in "${MOUNTS[@]}"; do
+              SECRET_FLAGS="$SECRET_FLAGS --set-secrets=$m"
+            done
+          fi
+          echo "Computed SECRET_FLAGS: $SECRET_FLAGS"
+          echo "SECRET_FLAGS=$SECRET_FLAGS" >> $GITHUB_ENV
+
+      # Deploy to Cloud Run using exact image provided
+      - name: Deploy to Cloud Run
+        run: | 
+          gcloud run deploy ${{ inputs.cloud_run_service }} \
+            --image ${{ inputs.image }} \
+            --region ${{ inputs.region }} \
+            --platform managed \
+            $SECRET_FLAGS \
+            --allow-unauthenticated
+
