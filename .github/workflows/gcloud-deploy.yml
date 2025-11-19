@@ -22,6 +22,10 @@ on:
         required: false
         type: string
         default: ""   # e.g. "/etc/secrets/db=db:latest,/etc/secrets/api=api-key:5"
+      env_vars:
+        required: false
+        type: string
+        default: "DEFAULT_VAR=1"
 
 jobs:
   deploy:
@@ -62,4 +66,5 @@ jobs:
             $SECRET_FLAGS \
             --allow-unauthenticated
             --service-account ${{ inputs.service_account }}
+             --set-env-vars ${{ inputs.env_vars }}
 
