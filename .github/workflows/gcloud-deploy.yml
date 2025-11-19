@@ -22,9 +22,6 @@ on:
         required: false
         type: string
         default: ""   # e.g. "/etc/secrets/db=db:latest,/etc/secrets/api=api-key:5"
-    secrets:
-      github_token:
-        required: true
 
 jobs:
   deploy:
