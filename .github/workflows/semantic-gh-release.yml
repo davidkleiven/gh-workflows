@@ -50,7 +50,14 @@ jobs:
         with:
           tag_name: ${{ steps.create_release.outputs.new_release_git_tag }}
           body: ${{ steps.create_release.outputs.new_release_notes }}
+      - name: Set outputs
+        id: set_outputs
+        run: |
+          echo "release_created=${{ steps.create_release.outputs.new_release_published }}" >> $GITHUB_OUTPUT
+          echo "new_tag=${{ steps.create_release.outputs.new_release_git_tag }}" >> $GITHUB_OUTPUT
+          echo "release_notes=${{ steps.create_release.outputs.new_release_notes }}" >> $GITHUB_OUTPUT
+
     outputs:
-      release_created: ${{ steps.create_release.outputs.new_release_published }}
-      new_tag: ${{ steps.create_release.outputs.new_release_git_tag }}
-      release_notes: ${{ steps.create_release.outputs.new_release_notes }}
+      release_created: ${{ steps.set_outputs.outputs.release_created }}
+      new_tag: ${{ steps.set_outputs.outputs.new_tag }}
+      release_notes: ${{ steps.set_outputs.outputs.release_notes }}
