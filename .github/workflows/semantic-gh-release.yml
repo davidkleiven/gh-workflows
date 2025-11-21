@@ -9,9 +9,15 @@ on:
         type: string
         default: ./.releaserc.json
     outputs:
-      release_created: ${{ steps.set_outputs.outputs.release_created }}
-      new_tag: ${{ steps.set_outputs.outputs.new_tag }}
-      release_notes: ${{ steps.set_outputs.outputs.release_notes }}
+      release_created:
+        description: "Whether a release was created"
+        value: ${{ jobs.semantic-release.outputs.release_created }}
+      new_tag:
+        description: "Tag of the release created"
+        value: ${{ jobs.semantic-release.outputs.new_tag }}
+      release_notes:
+        description: "Release not of the release created"
+        value: ${{ jobs.semantic-release.outputs.release_notes }}
 
 permissions:
   contents: read
