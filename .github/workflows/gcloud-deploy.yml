@@ -26,6 +26,10 @@ on:
         required: false
         type: string
         default: "DEFAULT_VAR=1"
+      port:
+        required: false
+        type: int
+        default: 8080
 
 jobs:
   deploy:
@@ -66,5 +70,6 @@ jobs:
             $SECRET_FLAGS \
             --allow-unauthenticated
             --service-account ${{ inputs.service_account }}
-             --set-env-vars ${{ inputs.env_vars }}
+            --set-env-vars ${{ inputs.env_vars }}
+            --port ${{ inputs.port }}
 
