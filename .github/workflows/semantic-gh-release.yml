@@ -29,6 +29,10 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+    outputs:
+      release_created: ${{ steps.set_outputs.outputs.release_created }}
+      new_tag: ${{ steps.set_outputs.outputs.new_tag }}
+      release_notes: ${{ steps.set_outputs.outputs.release_notes }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
