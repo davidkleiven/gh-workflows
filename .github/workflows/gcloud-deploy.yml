@@ -28,7 +28,7 @@ on:
         default: "DEFAULT_VAR=1"
       port:
         required: false
-        type: int
+        type: number
         default: 8080
 
 jobs:
