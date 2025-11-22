@@ -67,8 +67,8 @@ jobs:
             --region ${{ inputs.region }} \
             --platform managed \
             $SECRET_FLAGS \
-            --allow-unauthenticated
-            --service-account ${{ inputs.service_account }}
-            --set-env-vars ${{ inputs.env_vars }}
+            --allow-unauthenticated \
+            --service-account ${{ inputs.service_account }} \
+            --set-env-vars ${{ inputs.env_vars }} \
             --port ${{ inputs.port }}
 
